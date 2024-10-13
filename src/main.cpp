@@ -1,9 +1,13 @@
 #include "defines.h"
 #include "variables.h"
+#include "functions.h"
+
 /*Суточный таймер, дата испытания 11.10.2024*/
 #include "DailyTimer.h"
 /*Используем именно эту библиотеку для получения данных о времени из модуля DS1307*/
 #include <iarduino_RTC.h>
+/*Подключаем библиотеку для работы с прерываниями по таймеру*/
+#include <TimerOne.h>
 
 /*Работаем с модулем часов реального времени RTC DS1307, создаём объект*/
 iarduino_RTC watch(RTC_DS1307);
@@ -22,9 +26,16 @@ void setup(){
   /*Активируем управление релейными модулями*/
   Relay1.SetActivity(true);
   Relay2.SetActivity(true);
+  /*Инициализация прерываний раз в полсекунды*/
+  Timer1.initialize(500000);
+  Timer1.attachInterrupt(TimingISR);
 }
 
 void loop(){
+  /**/
+  if(Update==ON){
+    Update=OFF;
+  }
   /**/
   char* currentTime=watch.gettime("His");
   /*Управляем релейными модулями*/
