@@ -50,11 +50,12 @@ void setup(){
 void loop(){
   /**/
   if(Update==ON){
+    /**/
     StringsUpdate();
-    //ToDisplay();
+    /**/
+    currentTime=watch.gettime("His");
   }
-  /**/
-  char* currentTime=watch.gettime("His");
+  
   /*Управляем релейными модулями*/
   Relay1.Control(currentTime);
   Relay2.Control(currentTime);

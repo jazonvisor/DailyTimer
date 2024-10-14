@@ -42,3 +42,6 @@ byte point=0x80;
 byte degree=0x63;
 byte sign=0x1;
 byte empty=0x0;
+
+/**/
+char* currentTime;
