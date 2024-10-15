@@ -23,11 +23,12 @@ LedControl Display=LedControl(DATAIN,CLK,LOAD,2);
 DailyTimer Relay1(Relay1Pin,Relay1Timeon,Relay1Timeoff);
 DailyTimer Relay2(Relay2Pin,Relay2Timeon,Relay2Timeoff);
 
+
 void setup(){
   /**/
   delay(300);      
   /*Только для отладки*/                                       
-  //Serial.begin(9600); 
+  Serial.begin(9600); 
   /*Инициируем работу с модулем DS1307*/                                    
   watch.begin();
   /*Активируем управление релейными модулями*/
@@ -50,9 +51,9 @@ void setup(){
 void loop(){
   /**/
   if(Update==ON){
-    /**/
+    /*Обновление led-дисплеев*/
     StringsUpdate();
-    /**/
+    /*Обновление данных о текущем времени*/
     currentTime=watch.gettime("His");
   }
   

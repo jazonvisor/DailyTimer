@@ -15,14 +15,14 @@ class DailyTimer{
   /*Текущий статус доступности управления*/
   bool isActive;
   /*Время включения - согласовываем с данными от модуля DS3231/DS1307/DS3102*/
-  uint16_t timeon;
+  uint32_t timeon;
   /*Время выключения - согласовываем с данными от модуля DS3231/DS1307/DS3102*/
-  uint16_t timeoff;
+  uint32_t timeoff;
   /*Текущее время приведённое в формат целого числа*/
-  uint16_t currtime;
+  uint32_t currtime;
 public:
   /*Конструктор объекта класса, в качестве параметра номере пина подключения релейного модуля*/
-  DailyTimer(uint8_t,uint16_t,uint16_t);
+  DailyTimer(uint8_t,uint32_t,uint32_t);
   /*Получить количество объектов управления*/
   uint8_t getObjectsCount(){return DailyTimer::objCount;}
   /*Получить порядковый номер объекта управления*/
@@ -33,13 +33,15 @@ public:
   bool GetActivity(){return this->isActive;};
   /*Управление объектом, получаем в строке текущее время от модуля DS1307*/
   void Control(char*);
+  /**/
+  uint32_t GetCurrTime(){return this->currtime;};
 };
 
 /*Статический счетчик количества объектов управления*/
 uint8_t DailyTimer::objCount=0;
 
 /*Конструктор*/
-DailyTimer::DailyTimer(uint8_t pinUsed,uint16_t timeon,uint16_t timeoff){
+DailyTimer::DailyTimer(uint8_t pinUsed,uint32_t timeon,uint32_t timeoff){
   /*Привязываемся к указанному пину, назначаем режим работы*/
   pinMode(pinUsed,OUTPUT);
   /**/
@@ -72,7 +74,7 @@ void DailyTimer::Control(char* value){
   /*Если управление объектом доступно*/
   if(isActive){
     /*Полученную из аргумента строку преобразуем в целое число*/
-    currtime=(uint16_t)atoi(value);
+    currtime=atol(value);
     /**/
     if(timeon<timeoff){
       /**/
