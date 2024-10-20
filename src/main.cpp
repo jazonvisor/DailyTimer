@@ -9,6 +9,8 @@
 #include <TimerOne.h>
 /*Для работы с led-индикаторами на базе драйвера MAX7219*/
 #include <LedControl.h>
+/*Для работы с пультом IR и приёмником IR*/
+#include <iarduino_IR_RX.h>
 
 /*Работаем с модулем часов реального времени RTC DS1307, создаём объект*/
 iarduino_RTC watch(RTC_DS1307);
@@ -23,6 +25,8 @@ LedControl Display=LedControl(DATAIN,CLK,LOAD,2);
 DailyTimer Relay1(Relay1Pin,Relay1Timeon,Relay1Timeoff);
 DailyTimer Relay2(Relay2Pin,Relay2Timeon,Relay2Timeoff);
 
+/*Объект IR для получения данных о нажатой кнопке на пульте*/
+iarduino_IR_RX IR(IR_PIN);
 
 void setup(){
   /**/
@@ -46,9 +50,15 @@ void setup(){
   /*Инициализация прерываний раз в полсекунды*/
   Timer1.initialize(500000);
   Timer1.attachInterrupt(TimingISR);
+
+  /*Работаем с IR приёмником*/
+  IR.begin();
 }
 
 void loop(){
+  /*Если в буфере имеются данные, принятые с пульта (была нажата кнопка)*/
+  if(IR.check()) Serial.println(IR.data, HEX);  /*Выводим код нажатой кнопки*/                                
+    
   /**/
   if(Update==ON){
     /*Обновление led-дисплеев*/
