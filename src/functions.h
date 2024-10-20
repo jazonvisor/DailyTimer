@@ -4,6 +4,8 @@ void TimingISR();
 void StringsUpdate();
 /*Форматирование даты/времени*/
 void ShowDateTime();
+/*Отрисовка корневого листа меню*/
+void ShowMenuSDTList();
 /*Функция вывода на дисплей*/
 void ToDisplay();
 /*Обработчик нажатия кнопок IR-пульта*/
@@ -68,7 +70,7 @@ void StringsUpdate(){
       break;
     /*Показываем/скроллим лист меню*/
     case MENU_SDT_LIST:
-      //ShowMenuSDTList();
+      ShowMenuSDTList();
       break;
     /*Показываем настройку значений даты*/
     case SET_DATE:
@@ -117,6 +119,19 @@ void ShowDateTime(){
     rString[5]=symbol[watch.minutes%10]^point;
   rString[6]=symbol[watch.seconds/10];
   rString[7]=symbol[watch.seconds%10];
+}
+
+/*Отрисовка корневого листа меню*/
+void ShowMenuSDTList(){
+  /*Левая часть*/
+  byte menuString[]={0x66,0x72,0x4F,0x76,0x3E,0x0,0x0,0x0};
+  for(int i=0;i<8;i++){
+    lString[i]=menuString[i];
+  }
+  /*Формируем правую часть*/
+  for(int i=0;i<8;i++){
+    rString[i]=RootMenuList[MenuList.getListItem()][i];
+  }
 }
 
 void TimingISR(){

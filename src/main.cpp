@@ -3,6 +3,8 @@
 
 /*Суточный таймер, дата испытания 11.10.2024*/
 #include "DailyTimer.h"
+/**/
+#include "MenuList.h"
 /*Используем именно эту библиотеку для получения данных о времени из модуля DS1307*/
 #include <iarduino_RTC.h>
 /*Подключаем библиотеку для работы с прерываниями по таймеру*/
@@ -17,6 +19,9 @@ iarduino_RTC watch(RTC_DS1307);
 
 /*Объект Display для работы с семисегментным дисплеем на базе драйвера MAX7219*/
 LedControl Display=LedControl(DATAIN,CLK,LOAD,2);
+
+/*Создаём объект листа меню*/
+MenuList MenuList(sizeof(RootMenuList)/8);
 
 /*Подключение заголовочного файла с функциями*/
 #include "functions.h"
