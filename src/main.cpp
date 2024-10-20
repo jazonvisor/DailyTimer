@@ -53,11 +53,14 @@ void setup(){
 
   /*Работаем с IR приёмником*/
   IR.begin();
+
+  /*Задание режима вывода на дисплей*/
+  MODE=SHOW_DATE_TIME;
 }
 
 void loop(){
   /*Если в буфере имеются данные, принятые с пульта (была нажата кнопка)*/
-  if(IR.check()) Serial.println(IR.data, HEX);  /*Выводим код нажатой кнопки*/                                
+  if(IR.check()) IRRemotePressHandler(IR.data);  /*Вызываем обработчик нажатий кнопок*/                                
     
   /**/
   if(Update==ON){

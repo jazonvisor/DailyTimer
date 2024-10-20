@@ -1,10 +1,52 @@
 /*Обработчик прерывания по таймеру*/
 void TimingISR();
-/**/
+/*Формирование строк - левая и правая*/
 void StringsUpdate();
-/**/
+/*Форматирование даты/времени*/
+void ShowDateTime();
+/*Функция вывода на дисплей*/
 void ToDisplay();
+/*Обработчик нажатия кнопок IR-пульта*/
+void IRRemotePressHandler(uint16_t);
+/*Обработчик нажатия кнопки Menu*/
+void ButtonMenuPressHandler();
 
+/*Обработчик нажатия кнопок IR-пульта*/
+void IRRemotePressHandler(uint16_t keycode){
+  switch(keycode){
+    case KEY_MENU:
+      ButtonMenuPressHandler();
+      break;
+    case KEY_EXIT:
+      //ButtonExitPressHandler();
+      break;
+    case KEY_OK:
+      //ButtonOkPressHandler();
+      break;
+    case KEY_CHUP:
+      //ButtonUpPressHandler();
+      break;
+    case KEY_CHDN:
+      //ButtonDownPressHandler();
+      break;
+    case KEY_RIGTH:
+      //ButtonRigthPressHandler();
+      break;
+    case KEY_LEFT:
+      //ButtonLeftPressHandler();
+      break;
+  }
+}
+
+/*Обработчик нажатия кнопки Menu*/
+void ButtonMenuPressHandler(){
+  if(MODE==SHOW_DATE_TIME){
+    /*Переход в режим показа листа меню настройки даты/времени*/
+    MODE=MENU_SDT_LIST;
+  }
+}
+
+/*Функция вывода на дисплей*/
 void ToDisplay(){
   for(int j=0;j<8;j++){
     /*Выводим левую часть*/
@@ -14,7 +56,41 @@ void ToDisplay(){
   }
 }
 
+/*Формирование строк - левая и правая*/
 void StringsUpdate(){
+  /*Проверяем режимы*/
+  switch(MODE)
+  {
+    /*Показываем дату и время*/
+    case SHOW_DATE_TIME:
+      ShowDateTime();
+      Update = OFF;
+      break;
+    /*Показываем/скроллим лист меню*/
+    case MENU_SDT_LIST:
+      //ShowMenuSDTList();
+      break;
+    /*Показываем настройку значений даты*/
+    case SET_DATE:
+      //ShowSetDate();
+      Update = OFF;
+      break;
+    /*Показываем настройку значений времени*/
+    case SET_TIME:
+      //ShowSetTime();
+      Update = OFF;
+      break;
+    /*Показ анимации сохранения*/
+    case SAVING:
+      //ShowSavingAnimation();
+      break;
+  }
+  ToDisplay();
+  //Update = OFF;
+}
+
+/*Форматирование даты/времени*/
+void ShowDateTime(){
   /*Получение данных о текущем времени в виде параметров*/
   watch.gettime();
   /*Формируем левую часть*/
@@ -41,8 +117,6 @@ void StringsUpdate(){
     rString[5]=symbol[watch.minutes%10]^point;
   rString[6]=symbol[watch.seconds/10];
   rString[7]=symbol[watch.seconds%10];
-  ToDisplay();
-  Update = OFF;
 }
 
 void TimingISR(){
