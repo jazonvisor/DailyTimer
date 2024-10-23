@@ -6,6 +6,10 @@ void StringsUpdate();
 void ShowDateTime();
 /*Показываем настройку даты*/
 void ShowSetDate();
+/*Показываем настройку времени*/
+void ShowSetTime();
+/*Реализация анимации имитирующей сохранение значений*/
+void ShowSavingAnimation();
 /*Отрисовка корневого листа меню*/
 void ShowMenuSDTList();
 /*Функция вывода на дисплей*/
@@ -81,12 +85,12 @@ void StringsUpdate(){
       break;
     /*Показываем настройку значений времени*/
     case SET_TIME:
-      //ShowSetTime();
+      ShowSetTime();
       Update = OFF;
       break;
     /*Показ анимации сохранения*/
     case SAVING:
-      //ShowSavingAnimation();
+      ShowSavingAnimation();
       break;
   }
   ToDisplay();
@@ -185,6 +189,90 @@ void ShowSetDate(){
         rString[7]=empty;
       }
       break; 
+  }
+}
+
+/*Показываем настройку времени*/
+void ShowSetTime(){
+  /*Формируем левую часть*/
+  for(int i=0;i<8;i++){
+    lString[i]=RootMenuList[MenuList.getListItem()][i];
+  }
+  /*Формируем правую часть*/
+  rString[0]=empty;
+  rString[1]=empty;
+  /*Смотрим текущую операцию настройки*/
+  enum:uint8_t{WAIT=0,SET_HOURS=5,SET_MINUTES=6,SET_SECONDS=7};
+  switch(Datetime.getNowOp()){
+    case WAIT:
+      rString[2]=symbol[Datetime.getHours()/10];
+      rString[3]=symbol[Datetime.getHours()%10]^point;
+      rString[4]=symbol[Datetime.getMinutes()/10];
+      rString[5]=symbol[Datetime.getMinutes()%10]^point;
+      rString[6]=symbol[Datetime.getSeconds()/10];
+      rString[7]=symbol[Datetime.getSeconds()%10];
+      break;
+    case SET_HOURS:
+      if(ClockPoint){
+        rString[2]=symbol[Datetime.getHours()/10];
+        rString[3]=symbol[Datetime.getHours()%10]^point;
+      }
+      else{
+        rString[2]=empty;
+        rString[3]=empty^point;
+      }
+      rString[4]=symbol[Datetime.getMinutes()/10];
+      rString[5]=symbol[Datetime.getMinutes()%10]^point;
+      rString[6]=symbol[Datetime.getSeconds()/10];
+      rString[7]=symbol[Datetime.getSeconds()%10];
+      break;
+    case SET_MINUTES:
+      rString[2]=symbol[Datetime.getHours()/10];
+      rString[3]=symbol[Datetime.getHours()%10]^point;
+      if(ClockPoint){
+        rString[4]=symbol[Datetime.getMinutes()/10];
+        rString[5]=symbol[Datetime.getMinutes()%10]^point;
+      }
+      else{
+        rString[4]=empty;
+        rString[5]=empty^point;
+      }
+      rString[6]=symbol[Datetime.getSeconds()/10];
+      rString[7]=symbol[Datetime.getSeconds()%10];
+      break;
+    case SET_SECONDS:
+      rString[2]=symbol[Datetime.getHours()/10];
+      rString[3]=symbol[Datetime.getHours()%10]^point;
+      rString[4]=symbol[Datetime.getMinutes()/10];
+      rString[5]=symbol[Datetime.getMinutes()%10]^point;
+      if(ClockPoint){
+        rString[6]=symbol[Datetime.getSeconds()/10];
+        rString[7]=symbol[Datetime.getSeconds()%10];
+      }
+      else{
+        rString[6]=empty;
+        rString[7]=empty;
+      }
+      break; 
+  }
+}
+
+/*Реализация анимации имитирующей сохранение значений*/
+void ShowSavingAnimation(){
+  if(a>=16){
+    a=0;
+    MODE=MENU_SDT_LIST;
+  }
+  else{
+    if(a<8){
+      lString[a]=sign;
+    }
+    else{
+      if(a>=8)
+        rString[a-8]=sign;
+    }
+    delay(50);
+    a++;
   }
 }
 
