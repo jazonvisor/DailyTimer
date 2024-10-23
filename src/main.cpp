@@ -5,6 +5,8 @@
 #include "DailyTimer.h"
 /**/
 #include "MenuList.h"
+/**/
+#include "Datetime.h"
 /*Используем именно эту библиотеку для получения данных о времени из модуля DS1307*/
 #include <iarduino_RTC.h>
 /*Подключаем библиотеку для работы с прерываниями по таймеру*/
@@ -22,6 +24,8 @@ LedControl Display=LedControl(DATAIN,CLK,LOAD,2);
 
 /*Создаём объект листа меню*/
 MenuList MenuList(sizeof(RootMenuList)/8);
+/**/
+Datetime Datetime;
 
 /*Подключение заголовочного файла с функциями*/
 #include "functions.h"

@@ -4,6 +4,8 @@ void TimingISR();
 void StringsUpdate();
 /*Форматирование даты/времени*/
 void ShowDateTime();
+/*Показываем настройку даты*/
+void ShowSetDate();
 /*Отрисовка корневого листа меню*/
 void ShowMenuSDTList();
 /*Функция вывода на дисплей*/
@@ -74,7 +76,7 @@ void StringsUpdate(){
       break;
     /*Показываем настройку значений даты*/
     case SET_DATE:
-      //ShowSetDate();
+      ShowSetDate();
       Update = OFF;
       break;
     /*Показываем настройку значений времени*/
@@ -119,6 +121,71 @@ void ShowDateTime(){
     rString[5]=symbol[watch.minutes%10]^point;
   rString[6]=symbol[watch.seconds/10];
   rString[7]=symbol[watch.seconds%10];
+}
+
+/*Показываем настройку даты*/
+void ShowSetDate(){
+  /*Формируем левую часть*/
+  for(int i=0;i<8;i++){
+    lString[i]=RootMenuList[MenuList.getListItem()][i];
+  }
+  /*Формируем правую часть*/
+  rString[0]=symbol[2];
+  rString[1]=symbol[0];
+  /*Смотрим текущую операцию настройки*/
+  enum:uint8_t{WAIT,SET_YEAR,SET_MONTH,SET_DAY};
+  switch(Datetime.getNowOp()){
+    case WAIT:
+      rString[2]=symbol[Datetime.getYear()/10];
+      rString[3]=symbol[Datetime.getYear()%10]^point;
+      rString[4]=symbol[Datetime.getMonth()/10];
+      rString[5]=symbol[Datetime.getMonth()%10]^point;
+      rString[6]=symbol[Datetime.getDay()/10];
+      rString[7]=symbol[Datetime.getDay()%10];
+      break;
+    case SET_YEAR:
+      if(ClockPoint){
+        rString[2]=symbol[Datetime.getYear()/10];
+        rString[3]=symbol[Datetime.getYear()%10]^point;
+      }
+      else{
+        rString[2]=empty;
+        rString[3]=empty^point;
+      }
+      rString[4]=symbol[Datetime.getMonth()/10];
+      rString[5]=symbol[Datetime.getMonth()%10]^point;
+      rString[6]=symbol[Datetime.getDay()/10];
+      rString[7]=symbol[Datetime.getDay()%10];
+      break;
+    case SET_MONTH:
+      rString[2]=symbol[Datetime.getYear()/10];
+      rString[3]=symbol[Datetime.getYear()%10]^point;
+      if(ClockPoint){
+        rString[4]=symbol[Datetime.getMonth()/10];
+        rString[5]=symbol[Datetime.getMonth()%10]^point;
+      }
+      else{
+        rString[4]=empty;
+        rString[5]=empty^point;
+      }
+      rString[6]=symbol[Datetime.getDay()/10];
+      rString[7]=symbol[Datetime.getDay()%10];
+      break;
+    case SET_DAY:
+      rString[2]=symbol[Datetime.getYear()/10];
+      rString[3]=symbol[Datetime.getYear()%10]^point;
+      rString[4]=symbol[Datetime.getMonth()/10];
+      rString[5]=symbol[Datetime.getMonth()%10]^point;
+      if(ClockPoint){
+        rString[6]=symbol[Datetime.getDay()/10];
+        rString[7]=symbol[Datetime.getDay()%10];
+      }
+      else{
+        rString[6]=empty;
+        rString[7]=empty;
+      }
+      break; 
+  }
 }
 
 /*Отрисовка корневого листа меню*/
